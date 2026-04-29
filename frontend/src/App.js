@@ -6,7 +6,6 @@ import{
   Routes,
   Route,
   Navigate,
-  Link,
 } from "react-router-dom";
 import Header from "./components/Header";
 import HomePage from "./components/HomePage";
@@ -76,7 +75,7 @@ function App() {
       socket.off("voteCreated");
       socket.off("voteDeleted");
     };
-  }, []);
+  }, [setUser]);
 
   const showNotification = (message, type) => {
     setNotification({ show: true, message, type });

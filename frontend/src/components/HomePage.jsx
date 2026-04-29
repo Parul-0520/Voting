@@ -28,7 +28,7 @@ const HomePage = ({
         }
         const data=await response.json();
         setVotes((prev)=>
-        prev.map((v)=>(v?._d==data?.vote?._id?data?.vote:v))
+        prev.map((v)=>(v?._d===data?.vote?._id?data?.vote:v))
     );
 
     setUser(data?.user);
@@ -38,8 +38,8 @@ const HomePage = ({
 }
     };
     
-    const boysVotes = votes?.filter((v) => v.option.includes("(M)"));
-    const girlsVotes = votes?.filter((v) => v.option.includes("(F)"));
+    // const boysVotes = votes?.filter((v) => v.option.includes("(M)"));
+    // const girlsVotes = votes?.filter((v) => v.option.includes("(F)"));
 
  return (
     <div className='votes-page'>
