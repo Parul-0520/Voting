@@ -32,14 +32,23 @@ export const AuthProvider=({children})=>{
     useEffect(()=>{
         initiaizeAuth();
     }, []);
-    const login=(token, userData)=>{
-        localStorage.setItem("token", token);
-        setUser(userData);
-    };
-    const logout=()=>{
-        localStorage.removeItem("token");
-        setUser(null);
-    };
+    
+    const login = (token, userData, adminId = null) => {
+  localStorage.setItem("token", token);
+  if (adminId) {
+    localStorage.setItem("adminId", adminId);
+  } else {
+    localStorage.removeItem("adminId");
+  }
+  setUser(userData);
+};
+
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("adminId"); // ← add karo
+  setUser(null);
+};
+
     return(
         <AuthContext.Provider value={{user, loading, login, logout, setUser}}>
             {children}

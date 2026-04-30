@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 const AdminPanel = ({votes, setVotes, showNotification}) => {
@@ -9,6 +9,79 @@ const AdminPanel = ({votes, setVotes, showNotification}) => {
   const [voters, setVoters] = useState({});
 
   const COLORS = ['#bc570a', '#ea15cd', '#0202C1', '#19b65d', '#01a2ff', '#628b09'];
+
+  const [approvedEmail, setApprovedEmail] = useState("");
+  const [approvedEmails, setApprovedEmails] = useState([]);
+  const [commonPassword, setCommonPassword] = useState("");
+
+  const fetchApprovedEmails = async () => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API}/api/approved-emails`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    const data = await response.json();
+    setApprovedEmails(data.approvedEmails || []);
+    setCommonPassword(data.commonPassword || "");
+  } catch (error) {
+    showNotification(error.message, "error");
+  }
+};
+
+const handleAddEmail = async () => {
+  if (!approvedEmail?.trim()) return;
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API}/api/approved-emails`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ email: approvedEmail }),
+    });
+    if (!response.ok) throw new Error("Failed to add email");
+    setApprovedEmails((prev) => [...prev, approvedEmail]);
+    setApprovedEmail("");
+    showNotification("Email approved successfully", "success");
+  } catch (error) {
+    showNotification(error.message, "error");
+  }
+};
+
+const handleRemoveEmail = async (email) => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API}/api/approved-emails`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ email }),
+    });
+    if (!response.ok) throw new Error("Failed to remove email");
+    setApprovedEmails((prev) => prev.filter((e) => e !== email));
+    showNotification("Email removed successfully", "success");
+  } catch (error) {
+    showNotification(error.message, "error");
+  }
+};
+
+const handleSetCommonPassword = async () => {
+  if (!commonPassword?.trim()) return;
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API}/api/common-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ commonPassword }),
+    });
+    if (!response.ok) throw new Error("Failed to set password");
+    showNotification("Common password set successfully", "success");
+  } catch (error) {
+    showNotification(error.message, "error");
+  }
+};
 
   const handleAddOption=async()=>{
     if(!newoption?.trim()) return;
@@ -76,6 +149,10 @@ const fetchVoters = async (voteId) => {
     showNotification(error.message, "error");
   }
 };
+
+useEffect(() => {
+  fetchApprovedEmails();
+}, []);
 
  return (
     <div className='admin-panel'>
@@ -160,6 +237,45 @@ const fetchVoters = async (voteId) => {
     </div>
 
     </div> {/* flex wrapper band */}
+
+    <div className='current-options' style={{marginTop: '2rem'}}>
+  <h3>Voter Access Control</h3>
+  
+  <h4>Common Password for Voters</h4>
+  <div className='add-option-form'>
+    <input
+      type='text'
+      value={commonPassword}
+      onChange={(e) => setCommonPassword(e.target.value)}
+      placeholder='Set common password for voters'
+    />
+    <button onClick={handleSetCommonPassword}>Set Password</button>
+  </div>
+
+  <h4 style={{marginTop: '1rem'}}>Approved Emails</h4>
+  <div className='add-option-form'>
+    <input
+      type='email'
+      value={approvedEmail}
+      onChange={(e) => setApprovedEmail(e.target.value)}
+      placeholder='Enter email to approve'
+    />
+    <button onClick={handleAddEmail}>Add Email</button>
+  </div>
+
+  <div style={{marginTop: '1rem'}}>
+    {approvedEmails.length === 0 ? (
+      <span>No approved emails yet</span>
+    ) : (
+      approvedEmails.map((email, i) => (
+        <div className='option-item' key={i}>
+          <span>{email}</span>
+          <button className='delete-btn' onClick={() => handleRemoveEmail(email)}>Remove</button>
+        </div>
+      ))
+    )}
+  </div>
+</div>  
     </div>
   )
 }

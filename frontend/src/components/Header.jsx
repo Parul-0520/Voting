@@ -35,11 +35,11 @@ const Header = ({user, logout, showNotification}) => {
                         <span className='welcome'>Welcome, </span>
                         {user?.username}
                     </span>
-                    {user?.role==="admin" && (
-                        <Link to="/admin" className='auth-link admin-link'>
-                            Admin
-                        </Link>
-                    )} 
+                    {user?.role==="admin" && !localStorage.getItem("adminId") && (
+    <Link to="/admin" className='auth-link admin-link'>
+        Admin
+    </Link>
+)}
 
                     <button className='logout-btn' onClick={handleLogout}>Logout</button>
                 </>
@@ -47,9 +47,9 @@ const Header = ({user, logout, showNotification}) => {
                 <Link to="login" className='auth-link'>
                     Login
                 </Link>
-                <Link to ="register" className='auth-link'>
+                {/* <Link to ="register" className='auth-link'>
                     Register
-                </Link>
+                </Link> */}
             </>}
         </div>
     </header>

@@ -12,6 +12,8 @@ import HomePage from "./components/HomePage";
 import LoginPage from "./components/LoginPage";
 import Register from "./components/RegisterPage";
 import AdminPanel from "./components/AdminPanel";
+import LandingPage from "./components/LandingPage";
+import ForgotPassword from "./components/ForgotPassword";
 
 function App() {
   const { user, logout, login, setUser } = useContext(AuthContext);
@@ -24,19 +26,26 @@ function App() {
     type: "info",
   });
 
-  // ✅ fetchVotes properly declare kiya
   const fetchVotes = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API}/api/votes`);
-      if (!response.ok) throw new Error("Failed to fetch votes");
-      const data = await response.json();
-      setVotes(data);
-    } catch (error) {
-      seterror(error?.message);
-    } finally {
+  try {
+    const adminId = localStorage.getItem("adminId") || 
+                   (user?.role === "admin" ? user?._id : user?.adminId);
+    
+    if (!adminId) {
       setisLoading(false);
+      return;
     }
-  };
+
+    const response = await fetch(`${process.env.REACT_APP_API}/api/votes/${adminId}`);
+    if (!response.ok) throw new Error("Failed to fetch votes");
+    const data = await response.json();
+    setVotes(data);
+  } catch (error) {
+    seterror(error?.message);
+  } finally {
+    setisLoading(false);
+  }
+};
 
   useEffect(() => {
     // ✅ socket useEffect ke andar
@@ -46,6 +55,8 @@ function App() {
     });
 
     fetchVotes();
+
+    
 
     socket.on("voteUpdated", (updatedVote) => {
       setVotes((prev) =>
@@ -70,12 +81,12 @@ function App() {
       showNotification("Vote deleted successfully!", "success");
     });
 
-    return () => {
-      socket.off("voteUpdated");
-      socket.off("voteCreated");
-      socket.off("voteDeleted");
-    };
-  }, [setUser]);
+   return () => {
+    socket.off("voteUpdated");
+    socket.off("voteCreated");
+    socket.off("voteDeleted");
+  };
+}, [setUser, user]);
 
   const showNotification = (message, type) => {
     setNotification({ show: true, message, type });
@@ -95,50 +106,66 @@ function App() {
 
       <main className="main-content">
         <Routes>
-          <Route path="/"
-          element={
-          <HomePage
-            votes={votes}
-            error={error}
-            user={user}
-            setUser={setUser}
-            setVotes={setVotes}
-            showNotification={showNotification}
-          />}/>
+<Route path="/"
+element={
+  user?.role === "admin" && !localStorage.getItem("adminId") ? (
+    <Navigate to="/admin"/>
+  ) : user ? (
+    <HomePage
+      votes={votes}
+      error={error}
+      user={user}
+      setUser={setUser}
+      setVotes={setVotes}
+      showNotification={showNotification}
+    />
+  ) : (
+    <LandingPage/>
+  )
+}/>
 
-          <Route path="/login"
-          element={
-            user?.role==="admin"?( 
-            <Navigate to="/admin"/> 
-            ) : user? (
-            <Navigate to="/"/>
-            ) : ( <LoginPage
-              showNotification={showNotification}
-              login={login}
-            />
+<Route path="/login"
+element={
+  user?.role==="admin" && !localStorage.getItem("adminId") ? ( 
+    <Navigate to="/admin"/> 
+  ) : user? (
+    <Navigate to="/"/>
+  ) : ( <LoginPage
+    showNotification={showNotification}
+    login={login}
+  />
+  )
+}/>
 
-            )
-          }/>
+<Route path="/register"
+element={
+  user?( 
+  <Navigate to="/"/> 
+  ) : (
+    <Register login={login} showNotification={showNotification}/>
+  )
+}/>
 
-          <Route path="/register"
-          element={
-            user?( 
-            <Navigate to="/"/> 
-            ) : (
-              <Register login={login} showNotification={showNotification}/>
-
-            )
-          }/>
+<Route
+  path="/forgot-password"
+  element={
+    user ? (
+      <Navigate to="/" />
+    ) : (
+      <ForgotPassword showNotification={showNotification} />
+    )
+  }
+/>
 
 {user?.role==="admin" &&(
-          <Route path="/admin"
-          element={
-            <AdminPanel
-            votes={votes}
-            setVotes={setVotes}
-            showNotification={showNotification}
-            />
-          }/>
+  <Route path="/admin"
+  element={
+    <AdminPanel
+    votes={votes}
+    setVotes={setVotes}
+    showNotification={showNotification}
+    />
+  }/>
 )}
         </Routes>
       </main>

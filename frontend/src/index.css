@@ -616,3 +616,120 @@ body {
   border-radius: 50px;
   font-size: 0.85rem;
 }
+
+
+.landing-page {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.landing-hero {
+  text-align: center;
+  padding: 5rem 2rem 3rem 2rem;
+}
+
+.landing-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.landing-accent {
+  background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.landing-subtitle {
+  font-size: 1.1rem;
+  color: var(--dark-gray);
+  max-width: 600px;
+  margin: 0 auto 1rem auto;
+  line-height: 1.7;
+}
+
+.landing-creator {
+  color: var(--dark-gray);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.landing-creator strong {
+  color: var(--primary-color);
+}
+
+.landing-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.voter-cta-btn {
+  background-color: var(--secondary-color) !important;
+}
+
+.landing-section {
+  padding: 3rem 0;
+}
+
+.landing-two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.landing-section-header {
+  margin-bottom: 2rem;
+}
+
+.landing-section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-top: 0.5rem;
+}
+
+.landing-tag {
+  display: inline-block;
+  background: var(--primary-color);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  margin-bottom: 0.5rem;
+}
+
+.landing-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.landing-step-number {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--primary-color);
+  opacity: 0.25;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.landing-feature-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.vote-card-h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}

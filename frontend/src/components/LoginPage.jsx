@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom'
 
 const LoginPage = ({ login, showNotification }) => {
     const navigate=useNavigate();
+    const [isVoter, setIsVoter] = useState(false);
     const [formData, setFormData]=useState({
         email: "",
         password: "",
+        adminEmail: "",
     });
 
     const handleChange=(event)=>{
@@ -15,32 +17,47 @@ const LoginPage = ({ login, showNotification }) => {
     const handleSubmit=async(event)=>{
       event.preventDefault();
       try{
-        const response=await fetch(
-            `${process.env.REACT_APP_API}/api/login`,{
-                method:"POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            }
-            );
+        const url = isVoter
+          ? `${process.env.REACT_APP_API}/api/voter-login`
+          : `${process.env.REACT_APP_API}/api/login`;
 
-            if(!response.ok) throw new Error("Log-in Failed");
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        });
 
-            const{token, user}=await response.json();
+        if (!response.ok) throw new Error("Log-in Failed");
 
-            login(token, user);
-            showNotification("Logged in successfully", "success");
-            navigate("/");
-      } catch(error){
+        const { token, user, adminId } = await response.json();
+        login(token, user, adminId);
+        showNotification("Logged in successfully", "success");
+        navigate("/");
+      } catch(error) {
         showNotification(error.message, "error");
-
       }
     };
 
   return (
     <div className='login-container'>
-        <h2>Login</h2>
+        <h2>{isVoter ? "Voter Login" : "Login"}</h2>
+
+        {/* ← Toggle */}
+        <div style={{display: 'flex', gap: '1rem', marginBottom: '1.5rem', justifyContent: 'center'}}>
+          <button
+            className={`submit-btn ${!isVoter ? '' : 'disabled'}`}
+            style={{width: 'auto', padding: '0.5rem 1.5rem', marginTop: 0}}
+            onClick={() => setIsVoter(false)}
+            type="button"
+          >Admin</button>
+          <button
+            className={`submit-btn ${isVoter ? '' : 'disabled'}`}
+            style={{width: 'auto', padding: '0.5rem 1.5rem', marginTop: 0}}
+            onClick={() => setIsVoter(true)}
+            type="button"
+          >Voter</button>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className='form-group'>
             <label>Email:</label>
@@ -52,6 +69,21 @@ const LoginPage = ({ login, showNotification }) => {
             required
             />
           </div>
+
+          {/* ← sirf voter ke liye */}
+          {isVoter && (
+            <div className='form-group'>
+              <label>Admin's Email:</label>
+              <input
+              type='email'
+              name='adminEmail'
+              value={formData.adminEmail}
+              onChange={handleChange}
+              required
+              />
+            </div>
+          )}
+
           <div className='form-group'>
             <label>Password:</label>
             <input
@@ -63,8 +95,17 @@ const LoginPage = ({ login, showNotification }) => {
             />
           </div>
           <button type='submit' className='submit-btn'>
-            Login
+            {isVoter ? "Login as Voter" : "Login"}
           </button>
+
+          {/* ← Forgot Password link — sirf admin login ke liye */}
+          {!isVoter && (
+            <p style={{ textAlign: "center", marginTop: "1rem" }}>
+              <a href="/forgot-password" style={{ color: "#6c63ff", textDecoration: "underline", cursor: "pointer" }}>
+                Forgot Password?
+              </a>
+            </p>
+          )}
         </form>
     </div>
   );
