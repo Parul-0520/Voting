@@ -18,7 +18,7 @@ const register = async (req, res) => {
   username,
   email,
   password,
-  role: "admin",
+  role: req.body.role || "admin",
 });
 
     const token = jwt.sign({ id: user?._id }, process.env.JWT_SECRET, {

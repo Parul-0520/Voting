@@ -194,7 +194,10 @@ app.post("/api/voter-login", async (req, res) => {
 
     const admin = await User.findOne({ 
       email: adminEmail,
-      approvedEmails: email 
+      $or: [
+        { approvedEmails: email },
+        { email: email, role: "admin" } 
+    ]
     });
 
     if (!admin) {
@@ -299,7 +302,11 @@ app.post("/api/reset-password", async (req, res) => {
   try {
     const { email, otp, newPassword } = req.body;
 
-    const admin = await User.findOne({ email, role: "admin" });
+    const admin = await User.findOne({ 
+    email: adminEmail,
+    approvedEmails: email  
+});
+
     if (!admin) {
       return res.status(404).json({ error: "Admin not found" });
     }

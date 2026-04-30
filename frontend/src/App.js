@@ -163,6 +163,7 @@ element={
     <AdminPanel
     votes={votes}
     setVotes={setVotes}
+    fetchVotes={fetchVotes}
     showNotification={showNotification}
     />
   }/>

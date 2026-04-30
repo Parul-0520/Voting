@@ -99,15 +99,15 @@ const response=await fetch(
         );
         if(!response.ok) throw new Error("Failed to add option");
 
-        const data=await response.json();
-
-        setVotes([...votes, data]);
+         await fetchVotes(); 
         setNewOption("");
+        setCategory("");
         showNotification("Option added successfully", "success");
-    } catch(error){
+    } catch (error) {
         showNotification(error.message, "error");
     }
-  };
+};
+
 const handleDeleteOption=async(id)=>{
 try{
   const response=await fetch(
@@ -259,7 +259,7 @@ useEffect(() => {
       onChange={(e) => setApprovedEmail(e.target.value)}
       placeholder='Enter email to approve'
     />
-    <button onClick={handleAddEmail}>Add An Email</button>
+    <button onClick={handleAddEmail}>Add Email</button>
   </div>
 
   <div style={{marginTop: '1rem'}}>

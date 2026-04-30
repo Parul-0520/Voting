@@ -7,6 +7,7 @@ const RegisterPage = ({ login, showNotification }) => {
         username: "",
         email: "",
         password: "",
+        role: "admin",
     });
     console.log(formData, "formData");
 
