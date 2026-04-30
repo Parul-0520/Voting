@@ -8,17 +8,18 @@ const register = async (req, res) => {
   }
 
   try {
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email, role: "admin" }); 
 
     if (existingUser) {
       return res.status(400).json({ error: "Email already in use" });
     }
 
     const user = await User.create({
-      username,
-      email,
-      password,
-    });
+  username,
+  email,
+  password,
+  role: "admin",
+});
 
     const token = jwt.sign({ id: user?._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",

@@ -6,7 +6,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: false,
     },
      username: {      
       type: String,
@@ -21,11 +21,32 @@ const userSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
-    votedFor: {
-      type: Types.ObjectId,
+     votedFor: {
+      type: [Types.ObjectId],  
       ref: "Vote",
-      deafult: [],
+      default: [],
     },
+    adminId: {             
+      type: Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    approvedEmails: {        
+      type: [String],
+      default: [],
+    },
+    commonPassword: {       
+      type: String,
+      default: null,
+    },
+    otp: {
+  type: String,
+  default: null,
+},
+otpExpiry: {
+  type: Date,
+  default: null,
+},
   },
   {
     timestamps: true,
