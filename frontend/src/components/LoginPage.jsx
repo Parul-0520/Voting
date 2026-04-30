@@ -42,7 +42,6 @@ const LoginPage = ({ login, showNotification }) => {
     <div className='login-container'>
         <h2>{isVoter ? "Voter Login" : "Login"}</h2>
 
-        {/* ← Toggle */}
         <div style={{display: 'flex', gap: '1rem', marginBottom: '1.5rem', justifyContent: 'center'}}>
           <button
             className={`submit-btn ${!isVoter ? '' : 'disabled'}`}
@@ -70,7 +69,6 @@ const LoginPage = ({ login, showNotification }) => {
             />
           </div>
 
-          {/* ← sirf voter ke liye */}
           {isVoter && (
             <div className='form-group'>
               <label>Admin's Email:</label>
@@ -98,7 +96,6 @@ const LoginPage = ({ login, showNotification }) => {
             {isVoter ? "Login as Voter" : "Login"}
           </button>
 
-          {/* ← Forgot Password link — sirf admin login ke liye */}
           {!isVoter && (
             <p style={{ textAlign: "center", marginTop: "1rem" }}>
               <a href="/forgot-password" style={{ color: "#6c63ff", textDecoration: "underline", cursor: "pointer" }}>

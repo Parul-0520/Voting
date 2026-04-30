@@ -21,9 +21,6 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
-
-
-// enhanced socketIo.io setup
 const io = socketIo(server, {
   cors: {
     origin: process.env.CLIENT_URL,
@@ -98,15 +95,12 @@ app.post("/api/vote/:id", authenticate, async (req, res) => {
       { new: true }
     );
 
-    
-
     io.emit("voteUpdated", vote);
     res.status(201).json({ vote, user });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
-
 
 // delete vote
 app.delete("/api/vote/:id", authenticate, isAdmin, async (req, res) => {
@@ -123,7 +117,7 @@ app.delete("/api/vote/:id", authenticate, isAdmin, async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-// socket io events
+
 io.on("connection", (socket) => {
   console.log("New client connected");
 
@@ -132,7 +126,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// get voters for a vote
 app.get("/api/vote/:id/voters", authenticate, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -146,7 +139,6 @@ app.get("/api/vote/:id/voters", authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// admin apni approved emails manage kare
 app.get("/api/approved-emails", authenticate, isAdmin, async (req, res) => {
   try {
     const admin = await User.findById(req.user._id);
@@ -182,7 +174,6 @@ app.delete("/api/approved-emails", authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// admin common password set kare voters ke liye
 app.post("/api/common-password", authenticate, isAdmin, async (req, res) => {
   try {
     const { commonPassword } = req.body;
@@ -196,13 +187,11 @@ app.post("/api/common-password", authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// voter login - email + common password se
 app.post("/api/voter-login", async (req, res) => {
   try {
     const { email, adminEmail } = req.body;
     const { password } = req.body;
 
-    // admin dhundho jisne yeh email approve ki hai
     const admin = await User.findOne({ 
       email: adminEmail,
       approvedEmails: email 
@@ -247,7 +236,6 @@ app.post("/api/voter-login", async (req, res) => {
   }
 });
 
-// votes sirf us admin ke dikhao
 app.get("/api/votes/:adminId", async (req, res) => {
   try {
     const { adminId } = req.params;
@@ -258,8 +246,6 @@ app.get("/api/votes/:adminId", async (req, res) => {
   }
 });
 
-// Temporary route - baad mein hata dena
-// Temporary route
 app.get("/api/fix-users", async (req, res) => {
   await User.updateMany({}, { $unset: { votedFor: "" } });
   res.json({ message: "Fixed!" });
@@ -267,7 +253,6 @@ app.get("/api/fix-users", async (req, res) => {
 
 const PORT = process.env.PORT || 3001;
 
-// ─── Forgot Password ───────────────────────────────────────────
 app.post("/api/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -277,20 +262,18 @@ app.post("/api/forgot-password", async (req, res) => {
       return res.status(404).json({ error: "Admin account not found with this email" });
     }
 
-    // 6-digit OTP generate karo
     const otp = crypto.randomInt(100000, 999999).toString();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); 
 
     admin.otp = otp;
     admin.otpExpiry = otpExpiry;
     await admin.save();
 
-    // Nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS, // Gmail App Password
+        pass: process.env.GMAIL_PASS, 
       },
     });
 
@@ -312,7 +295,6 @@ app.post("/api/forgot-password", async (req, res) => {
   }
 });
 
-// ─── Reset Password ────────────────────────────────────────────
 app.post("/api/reset-password", async (req, res) => {
   try {
     const { email, otp, newPassword } = req.body;
@@ -330,7 +312,6 @@ app.post("/api/reset-password", async (req, res) => {
       return res.status(400).json({ error: "OTP expired. Please request a new one" });
     }
 
-    // Password update — pre-save hook bcrypt kar dega
     admin.password = newPassword;
     admin.otp = null;
     admin.otpExpiry = null;

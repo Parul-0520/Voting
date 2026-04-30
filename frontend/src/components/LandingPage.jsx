@@ -21,7 +21,6 @@ const LandingPage = () => {
   return (
     <div className='landing-page'>
 
-      {/* Hero */}
       <section className='landing-hero'>
         <h1 className='landing-title'>
           Real-Time Voting,<br />
@@ -38,7 +37,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Problem + Solution */}
       <section className='landing-section'>
         <div className='landing-two-col'>
           <div className='vote-card'>
@@ -64,7 +62,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* How it works */}
       <section className='landing-section'>
         <div className='landing-section-header'>
           <div className='landing-tag'>How It Works</div>

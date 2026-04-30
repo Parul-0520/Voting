@@ -152,6 +152,7 @@ const fetchVoters = async (voteId) => {
 
 useEffect(() => {
   fetchApprovedEmails();
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
  return (
@@ -173,7 +174,6 @@ useEffect(() => {
       <button onClick={handleAddOption}>Add Option</button>
     </div>
 
-    {/* ← Sirf yahan flex wrapper add kiya */}
     <div style={{display: 'flex', gap: '2rem', alignItems: 'flex-start'}}>
 
     <div className='current-options' style={{flex: 1}}>
@@ -208,7 +208,6 @@ useEffect(() => {
   ))}
     </div>
 
-    {/* ← Sirf yahan chart add kiya */}
     <div className='current-options' style={{flex: 1}}>
       <h3>Results</h3>
       {[...new Set(votes.map((v) => v.category))].map((cat) => (
@@ -236,7 +235,7 @@ useEffect(() => {
       ))}
     </div>
 
-    </div> {/* flex wrapper band */}
+    </div> 
 
     <div className='current-options' style={{marginTop: '2rem'}}>
   <h3>Voter Access Control</h3>
@@ -260,7 +259,7 @@ useEffect(() => {
       onChange={(e) => setApprovedEmail(e.target.value)}
       placeholder='Enter email to approve'
     />
-    <button onClick={handleAddEmail}>Add Email</button>
+    <button onClick={handleAddEmail}>Add An Email</button>
   </div>
 
   <div style={{marginTop: '1rem'}}>

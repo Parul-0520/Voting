@@ -48,7 +48,6 @@ function App() {
 };
 
   useEffect(() => {
-    // ✅ socket useEffect ke andar
     const socket = socketIOClient(process.env.REACT_APP_API, {
       transports: ["websocket"],
       withCredentials: true,
@@ -86,11 +85,12 @@ function App() {
     socket.off("voteCreated");
     socket.off("voteDeleted");
   };
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, [setUser, user]);
 
   const showNotification = (message, type) => {
     setNotification({ show: true, message, type });
-    // ✅ stale closure fix
+
     setTimeout(() => setNotification((prev) => ({ ...prev, show: false })), 3000);
   };
 

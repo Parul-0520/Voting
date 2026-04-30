@@ -32,7 +32,7 @@ export const AuthProvider=({children})=>{
     useEffect(()=>{
         initiaizeAuth();
     }, []);
-    
+
     const login = (token, userData, adminId = null) => {
   localStorage.setItem("token", token);
   if (adminId) {
@@ -45,7 +45,7 @@ export const AuthProvider=({children})=>{
 
 const logout = () => {
   localStorage.removeItem("token");
-  localStorage.removeItem("adminId"); // ← add karo
+  localStorage.removeItem("adminId"); 
   setUser(null);
 };
 

@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = ({ showNotification }) => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1); // Step 1: Email, Step 2: OTP + New Password
+  const [step, setStep] = useState(1); 
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Step 1 — Email bhejo, OTP mangao
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -30,7 +29,6 @@ const ForgotPassword = ({ showNotification }) => {
     }
   };
 
-  // Step 2 — OTP + new password bhejo
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (newPassword.length < 6) {
@@ -60,7 +58,6 @@ const ForgotPassword = ({ showNotification }) => {
       <h2>Forgot Password</h2>
 
       {step === 1 ? (
-        // ── Step 1: Email form ──
         <form onSubmit={handleSendOtp}>
           <div className="form-group">
             <label>Admin Email:</label>
@@ -69,7 +66,7 @@ const ForgotPassword = ({ showNotification }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="apna admin email daalo"
+              placeholder="Kindly enter your email"
             />
           </div>
           <button type="submit" className="submit-btn" disabled={loading}>
@@ -82,10 +79,9 @@ const ForgotPassword = ({ showNotification }) => {
           </p>
         </form>
       ) : (
-        // ── Step 2: OTP + New Password form ──
         <form onSubmit={handleResetPassword}>
           <p style={{ textAlign: "center", color: "#888", marginBottom: "1rem" }}>
-            OTP bheja gaya: <strong>{email}</strong>
+            OTP sent successfully: <strong>{email}</strong>
           </p>
           <div className="form-group">
             <label>OTP:</label>
@@ -94,7 +90,7 @@ const ForgotPassword = ({ showNotification }) => {
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               required
-              placeholder="6-digit OTP daalo"
+              placeholder="Enter a 6-digit OTP"
               maxLength={6}
             />
           </div>
@@ -105,7 +101,7 @@ const ForgotPassword = ({ showNotification }) => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
-              placeholder="naya password daalo"
+              placeholder="Kindly enter your new password"
             />
           </div>
           <button type="submit" className="submit-btn" disabled={loading}>
@@ -116,7 +112,7 @@ const ForgotPassword = ({ showNotification }) => {
               onClick={() => setStep(1)}
               style={{ color: "#6c63ff", textDecoration: "underline", cursor: "pointer" }}
             >
-              Email change karo
+              Change your email
             </span>
           </p>
         </form>
