@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
-const AdminPanel = ({votes, setVotes, showNotification, fetchVotes}) => {
+const AdminPanel = ({votes = [], setVotes, showNotification, fetchVotes}) => {
   const [newoption, setNewOption]=useState("");
 
   const [category, setCategory] = useState("");
