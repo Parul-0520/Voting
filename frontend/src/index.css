@@ -733,3 +733,35 @@ body {
   color: var(--text-color);
   margin-bottom: 0.5rem;
 }
+
+
+.view-toggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  width: fit-content;
+  border: 2px solid #d97a3f;
+}
+
+.view-toggle button {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background: white;
+  color: #d97a3f;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.view-toggle button:hover:not(:disabled) {
+  background: #fce8d5;
+}
+
+.view-toggle button:disabled {
+  background: linear-gradient(135deg, #f7a95c, #e8622c);
+  color: white;
+  cursor: default;
+}

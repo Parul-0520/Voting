@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import VoteBars3D from './VoteBars3D';
 
 const AdminPanel = ({votes = [], setVotes, showNotification, fetchVotes}) => {
   const [newoption, setNewOption]=useState("");
@@ -13,6 +14,8 @@ const AdminPanel = ({votes = [], setVotes, showNotification, fetchVotes}) => {
   const [approvedEmail, setApprovedEmail] = useState("");
   const [approvedEmails, setApprovedEmails] = useState([]);
   const [commonPassword, setCommonPassword] = useState("");
+
+  const [showPanel, setShowPanel] = useState('pie'); 
 
   const fetchApprovedEmails = async () => {
   try {
@@ -208,32 +211,53 @@ useEffect(() => {
   ))}
     </div>
 
-    <div className='current-options' style={{flex: 1}}>
-      <h3>Results</h3>
-      {[...new Set(votes.map((v) => v.category))].map((cat) => (
-        <div key={cat}>
-          <h4>{cat}</h4>
-          <PieChart width={300} height={250}>
-            <Pie
-              data={votes.filter((v) => v.category === cat).map((v) => ({
-                name: v.option,
-                value: v.votes || 0
-              }))}
-              cx={150}
-              cy={110}
-              outerRadius={80}
-              dataKey="value"
-            >
-              {votes.filter((v) => v.category === cat).map((_, i) => (
-                <Cell key={i} fill={COLORS[i % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </div>
-      ))}
+
+   <div className='current-options' style={{flex: 1}}>
+  <h3>Results</h3>
+
+  <div className="view-toggle">
+    <button onClick={() => setShowPanel('pie')} disabled={showPanel === 'pie'}>
+      Pie View
+    </button>
+    <button onClick={() => setShowPanel('3d')} disabled={showPanel === '3d'}>
+      Live 3D View
+    </button>
+  </div>
+
+  {[...new Set(votes.map((v) => v.category))].map((cat) => (
+    <div key={cat}>
+      <h4>{cat}</h4>
+
+      {showPanel === 'pie' ? (
+        <PieChart width={300} height={250}>
+          <Pie
+            data={votes.filter((v) => v.category === cat).map((v) => ({
+              name: v.option,
+              value: v.votes || 0
+            }))}
+            cx={150}
+            cy={110}
+            outerRadius={80}
+            dataKey="value"
+          >
+            {votes.filter((v) => v.category === cat).map((_, i) => (
+              <Cell key={i} fill={COLORS[i % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      ) : (
+        <VoteBars3D
+    candidates={votes
+      .filter((v) => v.category === cat)
+      .map((v) => ({ name: v.option, value: v.votes || 0 }))}
+    colors={COLORS}
+  />
+      )}
     </div>
+  ))}
+</div>
 
     </div> 
 
